@@ -21,9 +21,9 @@
   </script>
 
   <meta property="og:type" content="website">
-<meta property="og:title" content="北有风雪的博客">
+<meta property="og:title" content="北有风雪的个人主页">
 <meta property="og:url" content="https://blog.suzaku.tech/index.html">
-<meta property="og:site_name" content="北有风雪的博客">
+<meta property="og:site_name" content="北有风雪的个人主页">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="Teng Yongjie">
 <meta property="article:tag" content="Java">
@@ -49,7 +49,7 @@
   };
 </script>
 
-  <title>北有风雪的博客</title>
+  <title>北有风雪的个人主页</title>
   
 
 
@@ -80,7 +80,7 @@
   </style>
 </noscript>
 
-<link rel="alternate" href="/atom.xml" title="北有风雪的博客" type="application/atom+xml">
+<link rel="alternate" href="/atom.xml" title="北有风雪的个人主页" type="application/atom+xml">
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -101,7 +101,7 @@
 
     <a href="/" class="brand" rel="start">
       <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">北有风雪的博客</h1>
+      <h1 class="site-title">北有风雪的个人主页</h1>
       <span class="logo-line-after"><i></i></span>
     </a>
       <p class="site-subtitle" itemprop="description">靠谱程序猿养成记</p>
@@ -179,7 +179,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="北有风雪的博客">
+      <meta itemprop="name" content="北有风雪的个人主页">
     </span>
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
@@ -227,6 +227,123 @@
             </div>
           <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.suzaku.tech/2016/05/06/linux-centos-java/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Teng Yongjie">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北有风雪的个人主页">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2016/05/06/linux-centos-java/" class="post-title-link" itemprop="url">CentOS安装java环境</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-05-06 13:50:45" itemprop="dateCreated datePublished" datetime="2016-05-06T13:50:45+08:00">2016-05-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-15 17:16:39" itemprop="dateModified" datetime="2020-08-15T17:16:39+08:00">2020-08-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><p>一般情况下，我们都要将linux自带的OPENJDK卸载掉，然后安装SUN的JDK。</p>
+<h2 id="首先，卸载自带的java"><a href="#首先，卸载自带的java" class="headerlink" title="首先，卸载自带的java"></a>首先，卸载自带的java</h2><p>查看Linux自带的JDK是否已安装。<br>输入如下命令，查看已经安装的JAVA版本信息。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
+
+<p>输入如下命令，查看JDK的信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -qa|grep java</span><br></pre></td></tr></table></figure>
+
+<p>如下图所示。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTYwNTA2MTMzNzM1ODU1?x-oss-process=image/format,png" alt="查看jdk版本"></p>
+<p>卸载已经安装的JAVA，如下图所示。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTYwNTA2MTMzODU2NDUw?x-oss-process=image/format,png" alt="卸载java"></p>
+<p>卸载完成，如下图所示。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTYwNTA2MTM0MDAwNjcy?x-oss-process=image/format,png" alt="卸载完成"></p>
+<p>卸载另外一个，如下图所示。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTYwNTA2MTM0MDQ5OTA2?x-oss-process=image/format,png" alt="卸载另一个"></p>
+<p>卸载完成，如下图所示。<br><img src="https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTYwNTA2MTM0MTI0Mjk3?x-oss-process=image/format,png" alt="卸载完成"></p>
+<h2 id="第二步，安装SUN的JDK。"><a href="#第二步，安装SUN的JDK。" class="headerlink" title="第二步，安装SUN的JDK。"></a>第二步，安装SUN的JDK。</h2><p>官网：<a href="http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html" target="_blank" rel="noopener">http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html</a></p>
+<p>在/usr下建立一个java目录，以备将java程序安装在此目录下，输入如下命令： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir &#x2F;usr&#x2F;java</span><br></pre></td></tr></table></figure>
+
+<p>把下载好的安装文件拷贝到原系统的共享文件夹share中，通过命令查看文件： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;mnt&#x2F;share  </span><br><span class="line">ls -a</span><br></pre></td></tr></table></figure>
+
+<p>将文件复制到/usr/java目录下，输入如下命令： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp *.gz &#x2F;usr&#x2F;java</span><br></pre></td></tr></table></figure>
+
+<p>查看/usr/java目录，输入如下命令： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;java  </span><br><span class="line">ls -a</span><br></pre></td></tr></table></figure>
+
+<p>解压文件，输入如下命令：<br>Linux代码  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -xzvf jdk-7u79-linux-x64.gz</span><br></pre></td></tr></table></figure>
+
+<p>解压后，在/usr/java目录下就会生成一个新的目录jdk1.7.0_79，该目录下存放的是解压后的文件。<br>为了以后设置方便，我们该生成的目录jdk1.7.0_79改名为jdk，输入如下命令： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mv jdk1.7.0_79 jdk</span><br></pre></td></tr></table></figure>
+
+<p>或者，如果你下载的文件是rpm 格式的话，在上面用tar命令处，替换为下列命令来安装，其他步骤不变。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh jdk-7u79-linux-x64.rpm</span><br></pre></td></tr></table></figure>
+
+<p>最后进行环境变量的设置。<br>输入如下命令，进入配置文件，或者通过其他方式打开配置文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+
+<p>进入配置文件，如下图所示，将下面的第1行删除，换为下面2-4行配置信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export PATH USER LOGNAME MAIL HOSTNAME HISTSIZE HISTCONTROL</span><br><span class="line">export JAVA_HOME&#x3D;&#x2F;usr&#x2F;local&#x2F;jdk1.7.0_79</span><br><span class="line">export PATH&#x3D;$JAVA_HOME&#x2F;bin:$PATH</span><br><span class="line">export CLASSPATH&#x3D;.:$JAVA_HOME&#x2F;lib&#x2F;dt.jar:$JAVA_HOME&#x2F;lib&#x2F;tools.jar</span><br></pre></td></tr></table></figure>
+
+<p>让环境变量生效。<br>执行配置文件，令其立刻生效，输入如下命令： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+
+<p>验证是否安装成功，输入如下命令： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Java -version</span><br></pre></td></tr></table></figure>
       
     </div>
 
@@ -309,20 +426,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>

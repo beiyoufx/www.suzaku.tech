@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"blog.suzaku.tech","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文主要介绍Nginx在linux下的安装与设置。Nginx是一个高性能的web反向代理服务器，详情参考nginx官网，中文文档。 1、准备工作选首先安装这几个软件：GCC，PCRE（Perl Compatible Regular Expression），zlib，OpenSSL。Nginx是C写的，需要用GCC编译；Nginx的Rewrite和HTTP模块会用到PCRE；Nginx中的Gzip用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS安装Nginx服务器">
+<meta property="og:url" content="https://blog.suzaku.tech/2016/05/11/linux-centos-nginx/index.html">
+<meta property="og:site_name" content="北有风雪的个人主页">
+<meta property="og:description" content="本文主要介绍Nginx在linux下的安装与设置。Nginx是一个高性能的web反向代理服务器，详情参考nginx官网，中文文档。 1、准备工作选首先安装这几个软件：GCC，PCRE（Perl Compatible Regular Expression），zlib，OpenSSL。Nginx是C写的，需要用GCC编译；Nginx的Rewrite和HTTP模块会用到PCRE；Nginx中的Gzip用">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-05-11T05:58:32.000Z">
+<meta property="article:modified_time" content="2020-08-15T09:40:31.075Z">
+<meta property="article:author" content="Teng Yongjie">
+<meta property="article:tag" content="服务器">
+<meta property="article:tag" content="Nginx">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://blog.suzaku.tech/2016/05/11/linux-centos-nginx/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>CentOS安装Nginx服务器 | 北有风雪的个人主页</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="北有风雪的个人主页" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">北有风雪的个人主页</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">靠谱程序猿养成记</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user-secret fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://blog.suzaku.tech/2016/05/11/linux-centos-nginx/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Teng Yongjie">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="北有风雪的个人主页">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          CentOS安装Nginx服务器
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2016-05-11 13:58:32" itemprop="dateCreated datePublished" datetime="2016-05-11T13:58:32+08:00">2016-05-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-15 17:40:31" itemprop="dateModified" datetime="2020-08-15T17:40:31+08:00">2020-08-15</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>本文主要介绍Nginx在linux下的安装与设置。<br>Nginx是一个高性能的web反向代理服务器，详情参考<a href="http://nginx.org/" target="_blank" rel="noopener">nginx官网</a>，<a href="http://www.nginx.cn/doc" target="_blank" rel="noopener">中文文档</a>。</p>
+<h1 id="1、准备工作"><a href="#1、准备工作" class="headerlink" title="1、准备工作"></a>1、准备工作</h1><p>选首先安装这几个软件：GCC，PCRE（Perl Compatible Regular Expression），zlib，OpenSSL。<br>Nginx是C写的，需要用GCC编译；Nginx的Rewrite和HTTP模块会用到PCRE；Nginx中的Gzip用到zlib；<br>用命令<code># gcc</code>，查看gcc是否安装；如果出现<code>gcc: no input files</code>信息，说明已经安装好了。<br>否则，就需要用命令<code># yum install gcc</code>，进行安装了！一路可能需要多次输入y，进行确认。<br>安装好后，可以再用命令<code>#gcc</code>测试，或者用命令<code># gcc -v</code>查看其版本号。<br>同样方法，用如下命令安装PCRE，zlib，OpenSSL（其中devel，是develop开发包的意思）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># yum install -y pcre pcre-devel  </span><br><span class="line"># yum install -y zlib zlib-devel  </span><br><span class="line"># yum install -y openssl openssl-devel</span><br></pre></td></tr></table></figure>
+
+<h1 id="2、下载并安装"><a href="#2、下载并安装" class="headerlink" title="2、下载并安装"></a>2、下载并安装</h1><p>创建目录（nginx-src）并进去；然后，从<a href="http://nginx.org/" target="_blank" rel="noopener">nginx官网</a>下载，解压，配置，编译，安装：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># mkdir nginx-src &amp;&amp; cd nginx-src  </span><br><span class="line"># wget http:&#x2F;&#x2F;nginx.org&#x2F;download&#x2F;nginx-1.7.3.tar.gz  </span><br><span class="line"># tar xzf nginx-1.7.3.tar.gz   </span><br><span class="line"># cd nginx-1.7.3  </span><br><span class="line"># .&#x2F;configure  </span><br><span class="line"># make  </span><br><span class="line"># make install  </span><br><span class="line"># whereis nginx  </span><br><span class="line">nginx: &#x2F;usr&#x2F;local&#x2F;nginx</span><br></pre></td></tr></table></figure>
+
+<p>默认的安装路径为：<code>/usr/local/nginx</code>；跳转到其目录下sbin路径下，便可以启动或停止它了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># .&#x2F;nginx -h</span><br><span class="line"></span><br><span class="line">nginx version: nginx&#x2F;1.7.3  </span><br><span class="line">Usage: nginx [-?hvVtq] [-s signal] [-c filename] [-p prefix] [-g directives]  </span><br><span class="line">Options:  </span><br><span class="line">  -?,-h         : this help  </span><br><span class="line">  -v            : show version and exit  </span><br><span class="line">  -V            : show version and configure options then exit  </span><br><span class="line">  -t            : test configuration and exit  </span><br><span class="line">  -q            : suppress non-error messages during configuration testing  </span><br><span class="line">  -s signal     : send signal to a master process: stop, quit, reopen, reload  </span><br><span class="line">  -p prefix     : set prefix path (default: &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;)  </span><br><span class="line">  -c filename   : set configuration file (default: conf&#x2F;nginx.conf)  </span><br><span class="line">  -g directives : set global directives out of configuration file</span><br></pre></td></tr></table></figure>
+
+<p>启动：<code>nginx</code><br>停止：<code>nginx -s stop</code></p>
+<h1 id="3、添加到系统服务"><a href="#3、添加到系统服务" class="headerlink" title="3、添加到系统服务"></a>3、添加到系统服务</h1><p>使用命令<code># vi /etc/init.d/nginx</code>，打开编辑器，输入如下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;sh  </span><br><span class="line"># chkconfig: 2345 85 15  </span><br><span class="line"># Startup script for the nginx Web Server  </span><br><span class="line"># description: nginx is a World Wide Web server.   </span><br><span class="line"># It is used to serve HTML files and CGI.  </span><br><span class="line"># processname: nginx  </span><br><span class="line"># pidfile: &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;logs&#x2F;nginx.pid  </span><br><span class="line"># config: &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf&#x2F;nginx.conf  </span><br><span class="line">  </span><br><span class="line">PATH&#x3D;&#x2F;usr&#x2F;local&#x2F;sbin:&#x2F;usr&#x2F;local&#x2F;bin:&#x2F;sbin:&#x2F;bin:&#x2F;usr&#x2F;sbin:&#x2F;usr&#x2F;bin  </span><br><span class="line">DESC&#x3D;&quot;nginx deamon&quot;  </span><br><span class="line">NAME&#x3D;nginx  </span><br><span class="line">DAEMON&#x3D;&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;sbin&#x2F;$NAME  </span><br><span class="line">SCRIPTNAME&#x3D;&#x2F;etc&#x2F;init.d&#x2F;$NAME  </span><br><span class="line">  </span><br><span class="line">test -x $DAEMON || exit 0  </span><br><span class="line">  </span><br><span class="line">d_start()&#123;  </span><br><span class="line">  $DAEMON || echo -n &quot;already running&quot;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">d_stop()&#123;  </span><br><span class="line">  $DAEMON -s quit || echo -n &quot;not running&quot;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">d_reload()&#123;  </span><br><span class="line">  $DAEMON -s reload || echo -n &quot;can not reload&quot;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">case &quot;$1&quot; in  </span><br><span class="line">start)  </span><br><span class="line">  echo -n &quot;Starting $DESC: $NAME&quot;  </span><br><span class="line">  d_start  </span><br><span class="line">  echo &quot;.&quot;  </span><br><span class="line">;;  </span><br><span class="line">stop)  </span><br><span class="line">  echo -n &quot;Stopping $DESC: $NAME&quot;  </span><br><span class="line">  d_stop  </span><br><span class="line">  echo &quot;.&quot;  </span><br><span class="line">;;  </span><br><span class="line">reload)  </span><br><span class="line">  echo -n &quot;Reloading $DESC conf...&quot;  </span><br><span class="line">  d_reload  </span><br><span class="line">  echo &quot;reload .&quot;  </span><br><span class="line">;;  </span><br><span class="line">restart)  </span><br><span class="line">  echo -n &quot;Restarting $DESC: $NAME&quot;  </span><br><span class="line">  d_stop  </span><br><span class="line">  sleep 2  </span><br><span class="line">  d_start  </span><br><span class="line">  echo &quot;.&quot;  </span><br><span class="line">;;  </span><br><span class="line">*)  </span><br><span class="line">  echo &quot;Usage: $ScRIPTNAME &#123;start|stop|reload|restart&#125;&quot; &gt;&amp;2  </span><br><span class="line">  exit 3  </span><br><span class="line">;;  </span><br><span class="line">esac  </span><br><span class="line">  </span><br><span class="line">exit 0</span><br></pre></td></tr></table></figure>
+
+<p>保存退出后，再使用下面的命令，使其可执行；然后，添加配置并查看。<br>可用chkconfig修改其值，也可用ntsysv工具改变是否自启动。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># chmod +x &#x2F;etc&#x2F;init.d&#x2F;nginx  </span><br><span class="line"># chkconfig --add nginx  </span><br><span class="line"># chkconfig nginx on&#x2F;off  </span><br><span class="line"># chkconfig --list nginx  </span><br><span class="line">nginx 0:off 1:off 2:on 3:on 4:on 5:on 6:off</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/images/javanoteqr.jpg">
+            <span class="icon">
+              <i class="fab fa-weixin"></i>
+            </span>
+
+            <span class="label">WeChat</span>
+          </a>
+        </div>
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag"># 服务器</a>
+              <a href="/tags/Nginx/" rel="tag"># Nginx</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2016/05/11/linux-centos-mysql/" rel="prev" title="CentOS安装MySQL数据库">
+      <i class="fa fa-chevron-left"></i> CentOS安装MySQL数据库
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/07/03/hexo/" rel="next" title="hexo">
+      hexo <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、准备工作"><span class="nav-number">1.</span> <span class="nav-text">1、准备工作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、下载并安装"><span class="nav-number">2.</span> <span class="nav-text">2、下载并安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、添加到系统服务"><span class="nav-number">3.</span> <span class="nav-text">3、添加到系统服务</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Teng Yongjie"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Teng Yongjie</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/beiyoufx" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;beiyoufx" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Teng Yongjie</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

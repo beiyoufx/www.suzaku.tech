@@ -20,12 +20,12 @@
     var CONFIG = {"hostname":"blog.suzaku.tech","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="准备一般情况下，我们都要将linux自带的OPENJDK卸载掉，然后安装SUN的JDK。 首先，卸载自带的java查看Linux自带的JDK是否已安装。输入如下命令，查看已经安装的JAVA版本信息。  1java -version  输入如下命令，查看JDK的信息。 1rpm -qa|grep java  如下图所示。 卸载已经安装的JAVA，如下图所示。 卸载完成，如下图所示。 卸载另外一个，如">
+  <meta name="description" content="准备一般情况下，我们都要将linux自带的OPENJDK卸载掉，然后安装SUN的JDK。 首先，卸载自带的java查看Linux自带的JDK是否已安装。输入如下命令，查看已经安装的JAVA版本信息。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CentOS安装java环境">
 <meta property="og:url" content="https://blog.suzaku.tech/2016/05/06/linux-centos-java/index.html">
 <meta property="og:site_name" content="北有风雪的个人主页">
-<meta property="og:description" content="准备一般情况下，我们都要将linux自带的OPENJDK卸载掉，然后安装SUN的JDK。 首先，卸载自带的java查看Linux自带的JDK是否已安装。输入如下命令，查看已经安装的JAVA版本信息。  1java -version  输入如下命令，查看JDK的信息。 1rpm -qa|grep java  如下图所示。 卸载已经安装的JAVA，如下图所示。 卸载完成，如下图所示。 卸载另外一个，如">
+<meta property="og:description" content="准备一般情况下，我们都要将linux自带的OPENJDK卸载掉，然后安装SUN的JDK。 首先，卸载自带的java查看Linux自带的JDK是否已安装。输入如下命令，查看已经安装的JAVA版本信息。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTYwNTA2MTMzNzM1ODU1?x-oss-process=image/format,png">
 <meta property="og:image" content="https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTYwNTA2MTMzODU2NDUw?x-oss-process=image/format,png">
@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTYwNTA2MTM0MDQ5OTA2?x-oss-process=image/format,png">
 <meta property="og:image" content="https://imgconvert.csdnimg.cn/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTYwNTA2MTM0MTI0Mjk3?x-oss-process=image/format,png">
 <meta property="article:published_time" content="2016-05-06T05:50:45.000Z">
-<meta property="article:modified_time" content="2020-08-15T09:27:21.918Z">
+<meta property="article:modified_time" content="2020-08-20T09:33:46.466Z">
 <meta property="article:author" content="Teng Yongjie">
 <meta property="article:tag" content="Java环境">
 <meta name="twitter:card" content="summary">
@@ -204,7 +204,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-15 17:27:21" itemprop="dateModified" datetime="2020-08-15T17:27:21+08:00">2020-08-15</time>
+                <time title="修改时间：2020-08-20 17:33:46" itemprop="dateModified" datetime="2020-08-20T17:33:46+08:00">2020-08-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -236,6 +236,8 @@
       
         <h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><p>一般情况下，我们都要将linux自带的OPENJDK卸载掉，然后安装SUN的JDK。</p>
 <h2 id="首先，卸载自带的java"><a href="#首先，卸载自带的java" class="headerlink" title="首先，卸载自带的java"></a>首先，卸载自带的java</h2><p>查看Linux自带的JDK是否已安装。<br>输入如下命令，查看已经安装的JAVA版本信息。 </p>
+<a id="more"></a>
+
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -version</span><br></pre></td></tr></table></figure>
 
 <p>输入如下命令，查看JDK的信息。</p>

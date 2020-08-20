@@ -20,20 +20,21 @@
     var CONFIG = {"hostname":"blog.suzaku.tech","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="第一篇博文世界那么大，总有些事情做不完">
+  <meta name="description" content="多数时候使用密码来登录远程linux服务器是不安全的，许多ssh客户端都会保存密码，有泄密的风险；而如果每次都手动输入密码，就显得不太方便，那么这个时候可以选择使用ssh密钥登录，就是把ssh公钥放到服务器，私钥放到客户端，客户端配置成密钥登录，会更方便也更安全。 生成一个rsa密钥对123456789101112131415161718192021[root@suzaku-20200812 ~]">
 <meta property="og:type" content="article">
-<meta property="og:title" content="hexo">
-<meta property="og:url" content="https://blog.suzaku.tech/2020/07/03/hexo/index.html">
+<meta property="og:title" content="Linux 设置密钥登录">
+<meta property="og:url" content="https://blog.suzaku.tech/2020/08/20/linux-ssh-login/index.html">
 <meta property="og:site_name" content="北有风雪的个人主页">
-<meta property="og:description" content="第一篇博文世界那么大，总有些事情做不完">
+<meta property="og:description" content="多数时候使用密码来登录远程linux服务器是不安全的，许多ssh客户端都会保存密码，有泄密的风险；而如果每次都手动输入密码，就显得不太方便，那么这个时候可以选择使用ssh密钥登录，就是把ssh公钥放到服务器，私钥放到客户端，客户端配置成密钥登录，会更方便也更安全。 生成一个rsa密钥对123456789101112131415161718192021[root@suzaku-20200812 ~]">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-07-03T09:41:49.000Z">
-<meta property="article:modified_time" content="2020-07-03T09:44:43.552Z">
+<meta property="article:published_time" content="2020-08-20T08:10:59.000Z">
+<meta property="article:modified_time" content="2020-08-20T09:26:14.373Z">
 <meta property="article:author" content="Teng Yongjie">
-<meta property="article:tag" content="随笔">
+<meta property="article:tag" content="服务器">
+<meta property="article:tag" content="SSH">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://blog.suzaku.tech/2020/07/03/hexo/">
+<link rel="canonical" href="https://blog.suzaku.tech/2020/08/20/linux-ssh-login/">
 
 
 <script id="page-configurations">
@@ -46,7 +47,7 @@
   };
 </script>
 
-  <title>hexo | 北有风雪的个人主页</title>
+  <title>Linux 设置密钥登录 | 北有风雪的个人主页</title>
   
 
 
@@ -168,7 +169,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://blog.suzaku.tech/2020/07/03/hexo/">
+    <link itemprop="mainEntityOfPage" href="https://blog.suzaku.tech/2020/08/20/linux-ssh-login/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -181,7 +182,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          hexo
+          Linux 设置密钥登录
         </h1>
 
         <div class="post-meta">
@@ -192,7 +193,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-07-03 17:41:49 / 修改时间：17:44:43" itemprop="dateCreated datePublished" datetime="2020-07-03T17:41:49+08:00">2020-07-03</time>
+              <time title="创建时间：2020-08-20 16:10:59 / 修改时间：17:26:14" itemprop="dateCreated datePublished" datetime="2020-08-20T16:10:59+08:00">2020-08-20</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -200,7 +201,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%90%90%E4%BA%8B/" itemprop="url" rel="index"><span itemprop="name">琐事</span></a>
+                  <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
                 </span>
             </span>
 
@@ -222,10 +223,33 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="第一篇博文"><a href="#第一篇博文" class="headerlink" title="第一篇博文"></a>第一篇博文</h1><p>世界那么大，总有些事情做不完</p>
-<a id="more"></a>
+        <p>多数时候使用密码来登录远程linux服务器是不安全的，许多ssh客户端都会保存密码，有泄密的风险；而如果每次都手动输入密码，就显得不太方便，那么这个时候可以选择使用ssh密钥登录，就是把ssh公钥放到服务器，私钥放到客户端，客户端配置成密钥登录，会更方便也更安全。</p>
+<h1 id="生成一个rsa密钥对"><a href="#生成一个rsa密钥对" class="headerlink" title="生成一个rsa密钥对"></a>生成一个rsa密钥对</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@suzaku-20200812 ~]# ssh-keygen -t rsa</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/root/.ssh/id_rsa):</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /root/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /root/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">7e:7a:29:07:e5:4f:05:b5:8f:98:66:b3:1b:77:71:1b root@suzaku-20200812</span><br><span class="line">The key's randomart image is:</span><br><span class="line">+--[ RSA 2048]----+</span><br><span class="line">|             ..  |</span><br><span class="line">|       .    .  . |</span><br><span class="line">|            .  . |</span><br><span class="line">|        . .  o.o |</span><br><span class="line">|        So  *..Eo|</span><br><span class="line">|       .* .o.o  =|</span><br><span class="line">|        ...+o ...|</span><br><span class="line">|        .o+ .+ . |</span><br><span class="line">|        .+  .*   |</span><br><span class="line">+-----------------+</span><br></pre></td></tr></table></figure>
 
-<p>靠谱程序员养成记</p>
+<p>默认生成的密钥文件在用户主目录下面的<code>.ssh</code>目录下，一般情况下不建议直接使用root用户进行登录。</p>
+<h1 id="密钥配置"><a href="#密钥配置" class="headerlink" title="密钥配置"></a>密钥配置</h1><p>将上面生成的<code>id_rsa.pub</code>公钥内容追加到<code>.ssh</code>目录下<code>authorized_keys</code>文件末尾。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd .ssh</span><br><span class="line">touch authorized_keys  -- 如果文件已经存在，则不需要新建</span><br><span class="line">cat id_rsa.pub &gt;&gt; authorized_keys   -- 将id_rsa.pub的内容追加到authorized_keys</span><br></pre></td></tr></table></figure>
+
+<p>修改<code>.ssh</code>目录的权限为700，<code>authorized_keys</code>文件的权限为600，否则登录会提示<code>server refuse you key</code>：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd ..</span><br><span class="line">chmod 700 .ssh</span><br><span class="line">chmod 600 .ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+
+<h2 id="普通用户配置"><a href="#普通用户配置" class="headerlink" title="普通用户配置"></a>普通用户配置</h2><p>如果你的用户不是root，而是一个普通用户，比如<code>suzaku</code>，那么需要更改<code>.ssh</code>的所有者为<code>suzaku</code>，否则仍然会登录不了：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chown -R suzaku:suzaku .ssh</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置授权文件"><a href="#配置授权文件" class="headerlink" title="配置授权文件"></a>配置授权文件</h2><p>默认授权文件会读取用户主目录下的<code>.ssh/authorized_keys</code>文件，可以再检查一下配置是否正确。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+<p>打开密钥登录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">RSAAuthentication yes</span><br><span class="line">PubkeyAuthentication yes</span><br><span class="line"><span class="meta">#</span><span class="bash"> The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> but this is overridden so installations will only check .ssh/authorized_keys</span></span><br><span class="line">AuthorizedKeysFile      .ssh/authorized_keys</span><br></pre></td></tr></table></figure>
+
+<h1 id="使用密钥进行登录"><a href="#使用密钥进行登录" class="headerlink" title="使用密钥进行登录"></a>使用密钥进行登录</h1><p>将上面生成的私钥<code>id_rsa</code>文件拷贝到本地，或者拷贝文件内容重新保存也行。</p>
+<h2 id="MAC下使用SecureCRT进行登录"><a href="#MAC下使用SecureCRT进行登录" class="headerlink" title="MAC下使用SecureCRT进行登录"></a>MAC下使用SecureCRT进行登录</h2><ul>
+<li>打开软件，选择配置-&gt;Connection-&gt;Protocol，使用SSH2登录</li>
+<li>选择Connection-&gt;Authentication，选择PublicKey方式</li>
+<li>点击右侧Properties进行PublicKey配置</li>
+<li>选择<code>Use session public key setting</code></li>
+<li>配置<code>Use identity or certificate file</code>，选择下载的<code>id_rsa</code>文件</li>
+<li>保存即可登录</li>
+</ul>
 
     </div>
 
@@ -264,7 +288,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag"># 随笔</a>
+              <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag"># 服务器</a>
+              <a href="/tags/SSH/" rel="tag"># SSH</a>
           </div>
 
         
@@ -273,13 +298,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2016/05/11/linux-centos-nginx/" rel="prev" title="CentOS安装Nginx服务器">
-      <i class="fa fa-chevron-left"></i> CentOS安装Nginx服务器
+    <a href="/2020/07/03/hexo/" rel="prev" title="hexo">
+      <i class="fa fa-chevron-left"></i> hexo
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/08/20/linux-ssh-login/" rel="next" title="Linux 设置密钥登录">
-      Linux 设置密钥登录 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -338,7 +360,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#第一篇博文"><span class="nav-number">1.</span> <span class="nav-text">第一篇博文</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#生成一个rsa密钥对"><span class="nav-number">1.</span> <span class="nav-text">生成一个rsa密钥对</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#密钥配置"><span class="nav-number">2.</span> <span class="nav-text">密钥配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#普通用户配置"><span class="nav-number">2.1.</span> <span class="nav-text">普通用户配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置授权文件"><span class="nav-number">2.2.</span> <span class="nav-text">配置授权文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用密钥进行登录"><span class="nav-number">3.</span> <span class="nav-text">使用密钥进行登录</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#MAC下使用SecureCRT进行登录"><span class="nav-number">3.1.</span> <span class="nav-text">MAC下使用SecureCRT进行登录</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

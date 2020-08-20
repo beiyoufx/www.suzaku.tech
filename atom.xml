@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://blog.suzaku.tech/"/>
-  <updated>2020-07-03T09:44:43.552Z</updated>
+  <updated>2020-08-20T09:26:14.373Z</updated>
   <id>https://blog.suzaku.tech/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux 设置密钥登录</title>
+    <link href="https://blog.suzaku.tech/2020/08/20/linux-ssh-login/"/>
+    <id>https://blog.suzaku.tech/2020/08/20/linux-ssh-login/</id>
+    <published>2020-08-20T08:10:59.000Z</published>
+    <updated>2020-08-20T09:26:14.373Z</updated>
+    
+    <content type="html"><![CDATA[<p>多数时候使用密码来登录远程linux服务器是不安全的，许多ssh客户端都会保存密码，有泄密的风险；而如果每次都手动输入密码，就显得不太方便，那么这个时候可以选择使用ssh密钥登录，就是把ssh公钥放到服务器，私钥放到客户端，客户端配置成密钥登录，会更方便也更安全。</p><h1 id="生成一个rsa密钥对"><a href="#生成一个rsa密钥对" class="headerlink" title="生成一个rsa密钥对"></a>生成一个rsa密钥对</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@suzaku-20200812 ~]# ssh-keygen -t rsa</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file in which to save the key (/root/.ssh/id_rsa):</span><br><span class="line">Enter passphrase (empty for no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved in /root/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved in /root/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">7e:7a:29:07:e5:4f:05:b5:8f:98:66:b3:1b:77:71:1b root@suzaku-20200812</span><br><span class="line">The key's randomart image is:</span><br><span class="line">+--[ RSA 2048]----+</span><br><span class="line">|             ..  |</span><br><span class="line">|       .    .  . |</span><br><span class="line">|            .  . |</span><br><span class="line">|        . .  o.o |</span><br><span class="line">|        So  *..Eo|</span><br><span class="line">|       .* .o.o  =|</span><br><span class="line">|        ...+o ...|</span><br><span class="line">|        .o+ .+ . |</span><br><span class="line">|        .+  .*   |</span><br><span class="line">+-----------------+</span><br></pre></td></tr></table></figure><p>默认生成的密钥文件在用户主目录下面的<code>.ssh</code>目录下，一般情况下不建议直接使用root用户进行登录。</p><h1 id="密钥配置"><a href="#密钥配置" class="headerlink" title="密钥配置"></a>密钥配置</h1><p>将上面生成的<code>id_rsa.pub</code>公钥内容追加到<code>.ssh</code>目录下<code>authorized_keys</code>文件末尾。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd .ssh</span><br><span class="line">touch authorized_keys  -- 如果文件已经存在，则不需要新建</span><br><span class="line">cat id_rsa.pub &gt;&gt; authorized_keys   -- 将id_rsa.pub的内容追加到authorized_keys</span><br></pre></td></tr></table></figure><p>修改<code>.ssh</code>目录的权限为700，<code>authorized_keys</code>文件的权限为600，否则登录会提示<code>server refuse you key</code>：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd ..</span><br><span class="line">chmod 700 .ssh</span><br><span class="line">chmod 600 .ssh/authorized_keys</span><br></pre></td></tr></table></figure><h2 id="普通用户配置"><a href="#普通用户配置" class="headerlink" title="普通用户配置"></a>普通用户配置</h2><p>如果你的用户不是root，而是一个普通用户，比如<code>suzaku</code>，那么需要更改<code>.ssh</code>的所有者为<code>suzaku</code>，否则仍然会登录不了：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chown -R suzaku:suzaku .ssh</span><br></pre></td></tr></table></figure><h2 id="配置授权文件"><a href="#配置授权文件" class="headerlink" title="配置授权文件"></a>配置授权文件</h2><p>默认授权文件会读取用户主目录下的<code>.ssh/authorized_keys</code>文件，可以再检查一下配置是否正确。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure><p>打开密钥登录</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">RSAAuthentication yes</span><br><span class="line">PubkeyAuthentication yes</span><br><span class="line"><span class="meta">#</span><span class="bash"> The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> but this is overridden so installations will only check .ssh/authorized_keys</span></span><br><span class="line">AuthorizedKeysFile      .ssh/authorized_keys</span><br></pre></td></tr></table></figure><h1 id="使用密钥进行登录"><a href="#使用密钥进行登录" class="headerlink" title="使用密钥进行登录"></a>使用密钥进行登录</h1><p>将上面生成的私钥<code>id_rsa</code>文件拷贝到本地，或者拷贝文件内容重新保存也行。</p><h2 id="MAC下使用SecureCRT进行登录"><a href="#MAC下使用SecureCRT进行登录" class="headerlink" title="MAC下使用SecureCRT进行登录"></a>MAC下使用SecureCRT进行登录</h2><ul><li>打开软件，选择配置-&gt;Connection-&gt;Protocol，使用SSH2登录</li><li>选择Connection-&gt;Authentication，选择PublicKey方式</li><li>点击右侧Properties进行PublicKey配置</li><li>选择<code>Use session public key setting</code></li><li>配置<code>Use identity or certificate file</code>，选择下载的<code>id_rsa</code>文件</li><li>保存即可登录</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;多数时候使用密码来登录远程linux服务器是不安全的，许多ssh客户端都会保存密码，有泄密的风险；而如果每次都手动输入密码，就显得不太方便，那么这个时候可以选择使用ssh密钥登录，就是把ssh公钥放到服务器，私钥放到客户端，客户端配置成密钥登录，会更方便也更安全。&lt;/p&gt;
+
+      
+    
+    </summary>
+    
+    
+      <category term="Linux" scheme="https://blog.suzaku.tech/categories/Linux/"/>
+    
+    
+      <category term="服务器" scheme="https://blog.suzaku.tech/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+      <category term="SSH" scheme="https://blog.suzaku.tech/tags/SSH/"/>
+    
+  </entry>
   
   <entry>
     <title>hexo</title>
